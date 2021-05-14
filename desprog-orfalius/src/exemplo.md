@@ -3,13 +3,17 @@ Algorítimo Rabin-Karop para busca em texto
 
 **Introdução**
 
-Algoritmos para busca em texto são muito comuns na computação. Esse consiste basicamente em achar um padrão pré estabelecido em um texto. Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
+Algoritmos para busca em texto são muito comuns na computação. Esses consistem basicamente em achar um padrão pré estabelecido em um texto. Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
 
 Entradas:
 * Padrão a ser encontrado ex. "projeto";
 * Texto ex. "projeto de desafios da computação, entrega 2 do projeto 1."
 
 Saída:
+* 0 e 48 - que são os índices onde começam o padrão
+
+A busca em texto tem uma série aplicações:
+
 * Achar uma palavra em um texto;
 * Busca por arquivos que contêm certas palavras chaves;
 * Detecção de plágio
@@ -101,7 +105,7 @@ O algoritmo de Rabin-Karp foi desenvolvido por Richard M. Karp e Michael O. Rabi
 
 Se multiplicarmos o valor ASCII do caracter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
 
-Fazendo a somatória dos valores referentes a cada charachter, acabamos com o valor Hash referente a essa string!
+Fazendo a somatória dos valores referentes a cada caracter, acabamos com o valor Hash referente a essa string!
 
 !!! Atenção
 As posições são de tras pra frente! Ou seja, na string "abc" a posição de "a" é 2, de "b" é 1 e de "c" é 0.
@@ -191,7 +195,7 @@ rolling_rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
 
         r += 1
 
-        hash_string = (hash_string - ASCII(l)*k**tamanho_referencia) * k + ASCII(r)*k
+        hash_string = (hash_string - ASCII(l)*k**tamanho_referencia) * k + ASCII(r)
 
         se(hash_string == hash_referencia):
             encontrados += 1
@@ -210,7 +214,7 @@ Podemos implementar o algoritmo de Rabin-Kharp de duas maneiras.
 
 ***Monte Carlo***
 
-Implementado como monte carlo, quando um hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência.
+Implementado como Monte Carlo, quando o hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência.
 Apesar de ser improvável, podem existir duas strings diferentes que geram o mesmo hash, levando o algoritmo a cometer erros. 
 
 
@@ -218,7 +222,7 @@ Apesar de ser improvável, podem existir duas strings diferentes que geram o mes
 Qual é a complexidade
 
 ::: Gabarito
-O loop vai rodar por n-m vezes, até o final do texto. Assim a complexidade será O(n-m)
+O loop vai rodar por n-m vezes, até o final do texto. Assim a complexidade será O(n)
 :::
 ???
 
