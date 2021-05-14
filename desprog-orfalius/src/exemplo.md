@@ -23,10 +23,10 @@ Escreva o pseudo código descrito acima
 ::: Gabarito
 ```
 algoritmo_ingenuo(texto,padrao){
-    m = tamanho do texto;
-    n = tamanho do padrão
+    n = tamanho do texto;
+    m = tamanho do padrão
     lista = []
-    Enquanto( contador <= m-n){
+    Enquanto( contador <= n-m){
         Se (padrão == texto[contador:n-1]{
             lista.append(contador)
         }
@@ -43,8 +43,8 @@ algoritmo_ingenuo(texto,padrao){
 Qual a complexidade do algoritmo
 
 ::: Gabarito
-O loop vai rodar por m-n vezes. Em cada iteração ele vai comparar o padrão, como esse tem n letras, vai fazer n operações.
-Dessa forma, fazendo as simplificações de complexidade, temos que a complexidade é: O(mn)
+O loop vai rodar por n-m vezes. Em cada iteração ele vai comparar o padrão, como esse tem m letras, vai fazer m operações.
+Dessa forma, fazendo as simplificações de complexidade, temos que a complexidade é: O(nm)
 :::
 ???
 
@@ -167,10 +167,10 @@ Como podemos implementar o rolling hash usando o novo jeito cálcular o hash?
 ::: Gabarito
 Ao calcularmos o hash value da string referente aos n primeiros charachteres do texto, estamos calculando o hash referente aos n-1 charachteres da próxima string dividios por k!
 Se utilizarmos o hash value da string anterior, remover o hash do primeiro charachter, atualizar a constante que multiplicao resto e somar o hash do próximo charachter, podemos otimizar o algorítimo!
-$ h(rojetoa) = (h(projeto) - h(p)*k)
+
+$h(rojetoa) = ((h(projeto) - h(p)*k^{posicao} )*k)+h(a)$
 :::
 ???
-
 
 ??? Checkpoint 7
 Agora tente escrever um pseudo código como o descrito no checkpoint anterior
@@ -205,81 +205,34 @@ rolling_rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
 :::
 ???
 
-Esse método que descrevemos é conhecido como Rolling Hash!
+**Implementações de Rabin-Karp na prática**
+
+Podemos implementar o algoritmo de Rabin-Kharp de duas maneiras.
+
+***Monte Carlo***
+
+Implementado como monte carlo, quando um hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência, porém podem existir duas strings diferentes que geram o mesmo hash, levando o algoritmo a cometer erros. 
 
 
-referencia
----------
-
-Para criar um parágrafo, basta escrever um texto contínuo, sem pular linhas.
-
-Você também pode criar
-
-1. listas;
-
-2. ordenadas,
-
-assim como
-
-* listas;
-
-* não-ordenadas
-
-e imagens. Lembre que todas as imagens devem estar em uma subpasta *img*.
-
-![](logo.png)
-
-Para tabelas, usa-se a [notação do
-MultiMarkdown](https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html),
-que é muito flexível. Vale a pena abrir esse link para saber todas as
-possibilidades.
-
-| coluna a | coluna b |
-|----------|----------|
-| 1        | 2        |
-
-Ao longo de um texto, você pode usar *itálico*, **negrito**, {red}(vermelho) e
-[[tecla]]. Também pode usar uma equação LaTeX: $f(n) \leq g(n)$. Se for muito
-grande, você pode isolá-la em um parágrafo.
-
-$$\lim_{n \rightarrow \infty} \frac{f(n)}{g(n)} \leq 1$$
-
-Para inserir uma animação, use `md ;` seguido do nome de uma pasta onde as
-imagens estão. Essa pasta também deve estar em *img*.
-
-;bubble
-
-Você também pode inserir código, inclusive especificando a linguagem.
-
-``` py
-def f():
-    print('hello world')
-```
-
-``` c
-void f() {
-    printf("hello world\n");
-}
-```
-
-Se não especificar nenhuma, o código fica com colorização de terminal.
-
-```
-hello world
-```
-
-
-!!! Aviso
-Este é um exemplo de aviso, entre `md !!!`.
-!!!
-
-
-??? Exercício
-
-Este é um exemplo de exercício, entre `md ???`.
+??? Checkpoint 8
+Qual é a complexidade
 
 ::: Gabarito
-Este é um exemplo de gabarito, entre `md :::`.
+O loop vai rodar por n-m vezes, até o final do texto. Assim a complexidade será O(n-m)
 :::
+???
 
+***Las Vegas***
+
+A versão Las Vegas do Algoritmo, ao encontrar uma correspondência, compara letra por letra com a palavra buscada, garantido que são iguais.
+
+
+??? Checkpoint 9
+Qual é a complexidade
+
+::: Gabarito
+Como o algoritmo faz a comparação de strings na força bruta apenas nas correspondências.No melhor caso o algoritmo rodará por todo o texto e quando achar um hash igual vai comparar letra a letra, tendo a complexidade igual a O(n+m).
+No pior dos casos o todos os hash do texto serão iguais ao do padrão, dessa forma, o algoritmo vai rodas pelo texto inteiro e a cada iteração vai comparar letra a letra, tendo uma complexidade igual a O(nm)
+
+:::
 ???
