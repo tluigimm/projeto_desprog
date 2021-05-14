@@ -95,9 +95,11 @@ O grande problema de usar o método descrito acima, é que a ordem não é levad
 
 **Rabin-Karp Algorithm**
 
-O algoritmo de Rabin-Karp foi desenvolvido por Richard M. Karp e Michael O. Rabin. Esse é uma algoritmo de busca em testo e faz o uso dos conceitos mencionados anteriormente, com algumas diferenças que lidam com os problemas mencionados.
+O algoritmo de Rabin-Karp foi desenvolvido por Richard M. Karp e Michael O. Rabin. Esse é um algoritmo de busca em texto e faz o uso dos conceitos mencionados anteriormente, com algumas diferenças que lidam com os problemas mencionados.
 
-Se multiplicarmos o valor ASCII do charachter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
+****Como resolver os hash iguais?****
+
+Se multiplicarmos o valor ASCII do caracter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
 
 Fazendo a somatória dos valores referentes a cada charachter, acabamos com o valor Hash referente a essa string!
 
@@ -165,9 +167,6 @@ rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
 Como podemos implementar o rolling hash usando o novo jeito cálcular o hash?
 
 ::: Gabarito
-Ao calcularmos o hash value da string referente aos n primeiros charachteres do texto, estamos calculando o hash referente aos n-1 charachteres da próxima string dividios por k!
-Se utilizarmos o hash value da string anterior, remover o hash do primeiro charachter, atualizar a constante que multiplicao resto e somar o hash do próximo charachter, podemos otimizar o algorítimo!
-
 $h(rojetoa) = ((h(projeto) - h(p)*k^{posicao} )*k)+h(a)$
 :::
 ???
@@ -211,7 +210,8 @@ Podemos implementar o algoritmo de Rabin-Kharp de duas maneiras.
 
 ***Monte Carlo***
 
-Implementado como monte carlo, quando um hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência, porém podem existir duas strings diferentes que geram o mesmo hash, levando o algoritmo a cometer erros. 
+Implementado como monte carlo, quando um hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência.
+Apesar de ser improvável, podem existir duas strings diferentes que geram o mesmo hash, levando o algoritmo a cometer erros. 
 
 
 ??? Checkpoint 8
@@ -225,6 +225,7 @@ O loop vai rodar por n-m vezes, até o final do texto. Assim a complexidade ser�
 ***Las Vegas***
 
 A versão Las Vegas do Algoritmo, ao encontrar uma correspondência, compara letra por letra com a palavra buscada, garantido que são iguais.
+Diferentemente do Monte Carlo, esse algoritmo não erra, porém ele tem maior complexidade, sendo que no pior dos casos ele pode ter a mesma eficiência do algoritmo ingênuo.
 
 
 ??? Checkpoint 9
