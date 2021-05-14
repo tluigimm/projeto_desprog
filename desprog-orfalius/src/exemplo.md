@@ -1,40 +1,100 @@
 Algorítimo Rabin-Karop para busca em texto
 ======
 
-Antes de entender o algorítimo Rabin-Karp, precisamos entender no que ele se baseia.
+**Introdução**
 
-Sabendo que todo charachter possui um valor ASCII associado, responda:
+Algoritmos para busca em texto são muito comuns na computação. Esse consiste basicamente em achar um padrão pré estabelecido em um texto. Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
 
-**como podemos fazer para diferenciar uma string de outra usando o valor ASCII de seus charachteres?**
+Entradas:
+* Padrão a ser encontrado ex. "projeto";
+* Texto ex. "projeto de desafios da computação, entrega 2 do projeto 1."
 
-se você imaginou que devemos somar o valor relativo a cada charachter e comparar com o da outra string, esta no caminho certo!!
+Saída:
+* Achar uma palavra em um texto;
+* Busca por arquivos que contêm certas palavras chaves;
+* Detecção de plágio
 
+**O algoritmo ingênuo**
+
+Esse algoritmo faz uso da força bruta para achar o padrão no texto. Ele separa seções do texto que tem o mesmo tamanho do padrão, compara letra por letra, depois descarta a primeira letra e usa a próxima letra, até o texto acabar.
 ??? Checkpoint
-
-Essa lógica apresenta uma falha, qual?
+Escreva o pseudo código descrito acima
 
 ::: Gabarito
-Ela não nos previne contra coincidências!
-
-Imagine a seguinte tabela ASCII:
-| charachter |    ascii   |
-|------------|------------|
-| a          | 1          |
-| b          | 2          |
-| c          | 3          |
-
-
-As strings "bb", "ca" e "ac" teriam o mesmo valor.
+```
+algoritmo_ingenuo(texto,padrao){
+    m = tamanho do texto;
+    n = tamanho do padrão
+    lista = []
+    Enquanto( contador <= m-n){
+        Se (padrão == texto[contador:n-1]{
+            lista.append(contador)
+        }
+        contador +=1;
+    }
+    return lista
+}
+```
 :::
 ???
 
+
+??? Checkpoint
+Qual a complexidade do algoritmo
+
+::: Gabarito
+O loop vai rodar por m-n vezes. Em cada iteração ele vai comparar o padrão, como esse tem n letras, vai fazer n operações.
+Dessa forma, fazendo as simplificações de complexidade, temos que a complexidade é: O(mn)
+:::
+???
+
+
+
+**O Algoritmo melhorado**
+
+Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
+![](ASCII_1.gif)
+
+
+
+$H(projeto) = H(p) + H(r) + H(o) + H(j) + H(e) + H(t) + H(o)$
+
+$H(projeto) = 112 + 114 + 111 + 106 + 101 + 116 +111$
+
+$H(projeto) = 771$
+
+
+??? Checkpoint
+Calcule os hashes das palavras: projeto, rojetoa. ojetoab. e escreva uma reflexão sobre os cálculos
+
+::: Gabarito
+771, 756, 740 
+Para calcular o hash da palavra subsequente basta subtrair o hash da letra que sai e adicionar o hash da letra nova.
+:::
+???
+
+**Rolling Hash**
+
+É o método que usa o hash anterior para calcular o novo, evitando cálculos repetidos e, assim, agilizando o processo.
+
+??? Checkpoint
+Qual é o grande problema de usar a solução descrita acima
+
+
+::: Gabarito
+O grande problema de usar o método descrito acima, é que a ordem não é levada em consideração, então as palavras abc e bca são iguais e, além disso, palavras diferentes podem ter o mesmo hash.
+:::
+???
+
+**Rabin-Karp Algorithm**
+
 ??? Checkpoint
 
-Como podemos resolver essa falha?
+Como podemos resolver o problema mencionado acima?
 
 ::: Gabarito
 
-Fácil! se multiplicarmos o valor ASCII do charachter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
+Se multiplicarmos o valor ASCII do charachter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
 
 Fazendo a somatória dos valores referentes a cada charachter, acabamos com o valor Hash referente a essa string!
 
@@ -53,9 +113,9 @@ Usando a tabela do gabarito do checkpoint 1, calcule o valor Hash das strings "b
 
 | string      |     hash    |
 |-------------|-------------|
-| bb          | 2k¹ + 2k⁰   |
-| ac          | 1k¹ + 3k⁰   |
-| ca          | 3k¹ + 1k⁰   |
+| bb          | 98k¹ + 98k⁰   |
+| ac          | 97k¹ + 99k⁰   |
+| ca          | 99k¹ + 97k⁰   |
 
 :::
 ???
@@ -101,7 +161,7 @@ rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
 
 ??? Checkpoint
 
-Esse método pode ser aprimorado? Como?
+Como podemos implementar o rolling hash usando o novo jeito cálcular o hash?
 
 ::: Gabarito
 Ao calcularmos o hash value da string referente aos n primeiros charachteres do texto, estamos calculando o hash referente aos n-1 charachteres da próxima string dividios por k!
