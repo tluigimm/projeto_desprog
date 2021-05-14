@@ -17,7 +17,7 @@ Saída:
 **O algoritmo ingênuo**
 
 Esse algoritmo faz uso da força bruta para achar o padrão no texto. Ele separa seções do texto que tem o mesmo tamanho do padrão, compara letra por letra, depois descarta a primeira letra e usa a próxima letra, até o texto acabar.
-??? Checkpoint
+??? Checkpoint 1
 Escreva o pseudo código descrito acima
 
 ::: Gabarito
@@ -39,7 +39,7 @@ algoritmo_ingenuo(texto,padrao){
 ???
 
 
-??? Checkpoint
+??? Checkpoint 2
 Qual a complexidade do algoritmo
 
 ::: Gabarito
@@ -53,6 +53,8 @@ Dessa forma, fazendo as simplificações de complexidade, temos que a complexida
 **O Algoritmo melhorado**
 
 Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
+
+Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
 ![](ASCII_1.gif)
 
 
@@ -64,11 +66,16 @@ $H(projeto) = 112 + 114 + 111 + 106 + 101 + 116 +111$
 $H(projeto) = 771$
 
 
-??? Checkpoint
+??? Checkpoint 3
 Calcule os hashes das palavras: projeto, rojetoa. ojetoab. e escreva uma reflexão sobre os cálculos
 
 ::: Gabarito
-771, 756, 740 
+$H(projeto) = 771$
+
+$H(rojetoa) = 756$
+
+$H(rojetoab) = 740$
+
 Para calcular o hash da palavra subsequente basta subtrair o hash da letra que sai e adicionar o hash da letra nova.
 :::
 ???
@@ -77,7 +84,7 @@ Para calcular o hash da palavra subsequente basta subtrair o hash da letra que s
 
 É o método que usa o hash anterior para calcular o novo, evitando cálculos repetidos e, assim, agilizando o processo.
 
-??? Checkpoint
+??? Checkpoint 4
 Qual é o grande problema de usar a solução descrita acima
 
 
@@ -88,11 +95,7 @@ O grande problema de usar o método descrito acima, é que a ordem não é levad
 
 **Rabin-Karp Algorithm**
 
-??? Checkpoint
-
-Como podemos resolver o problema mencionado acima?
-
-::: Gabarito
+O algoritmo de Rabin-Karp foi desenvolvido por Richard M. Karp e Michael O. Rabin. Esse é uma algoritmo de busca em testo e faz o uso dos conceitos mencionados anteriormente, com algumas diferenças que lidam com os problemas mencionados.
 
 Se multiplicarmos o valor ASCII do charachter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
 
@@ -102,12 +105,10 @@ Fazendo a somatória dos valores referentes a cada charachter, acabamos com o va
 As posições são de tras pra frente! Ou seja, na string "abc" a posição de "a" é 2, de "b" é 1 e de "c" é 0.
 !!!
 
-:::
-???
 
-??? Questão 1
+??? Checkpoint 5
 
-Usando a tabela do gabarito do checkpoint 1, calcule o valor Hash das strings "bb", "ca" e "ac".
+Usando a tabela ASCII, calcule o valor Hash das strings "bb", "ca" e "ac".
 
 ::: Gabarito
 
@@ -134,7 +135,7 @@ calcula_hash (string, tamanho, k):
     retorna total
 ```
 
-Agora que sabemos o que é um valor hash, fica fácil de encontrar strings dentro de textos. Basta procurar dentro do texto uma string de n charachteres que tenha o mesmo valor hash que a referência!
+Agora que sabemos o que é um valor hash, fica fácil de encontrar strings dentro de textos. Basta procurar dentro do texto uma string de n caracteres que tenha o mesmo valor hash que a referência!
 
 seria como nesse pseudo código:
 
@@ -159,18 +160,19 @@ rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
     retorna encontrados
 ```
 
-??? Checkpoint
+??? Checkpoint 6
 
 Como podemos implementar o rolling hash usando o novo jeito cálcular o hash?
 
 ::: Gabarito
 Ao calcularmos o hash value da string referente aos n primeiros charachteres do texto, estamos calculando o hash referente aos n-1 charachteres da próxima string dividios por k!
 Se utilizarmos o hash value da string anterior, remover o hash do primeiro charachter, atualizar a constante que multiplicao resto e somar o hash do próximo charachter, podemos otimizar o algorítimo!
+$ h(rojetoa) = (h(projeto) - h(p)*k)
 :::
 ???
 
 
-??? Questão 2
+??? Checkpoint 7
 Agora tente escrever um pseudo código como o descrito no checkpoint anterior
 
 ::: Gabarito
