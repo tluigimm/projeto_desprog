@@ -24,12 +24,12 @@ Quando você pensa em algorítimos de comparação de texto, provavelmente a pri
 
 Esse é um método funcional, apesar de ser longe do mais eficiente. Todavia, vamos nos manter com ele por enquanto.
 
-Sabemos que um padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja `m` e `n`o tamanho do texto, podemos pegar as m primeiras letras para comparar, caso não seja igual, excluimos a primeira letra e adicionamos a próxima, caso contrário retorna a posição no texto onde encontrou. Repetindo isso até `m==n` teremos varrido o texto todo!
+Sabemos que um padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja ```py m``` e ```py n``` o tamanho do texto, podemos pegar as m primeiras letras para comparar, caso não seja igual, excluimos a primeira letra e adicionamos a próxima, caso contrário retorna a posição no texto onde encontrou. Repetindo isso até ```py m==n``` teremos varrido o texto todo!
 
 ```c
 algoritmo_ingenuo(texto, padrao, n, m){
     lista = []
-    Enquanto( contador <= n-m){
+    Enquanto(contador <= n-m){
         Se (padrão == texto[contador:n-1]{
             lista.append(contador)
         }
@@ -58,21 +58,24 @@ Isso não parece muito eficiente... Os valores de m na prática são muito grand
 ??? Checkpoint 2
 Qual o problema com esse método?
 
-SEM RESPOSTA
 ::: Gabarito
+
+esse custo vem da comparação letra em letra
 
 :::
 ???
 
 Com isso em mente, vamos pensar em como melhorar ele
 
-**O Algoritmo melhorado**
+**O Algoritmo (quase) melhorado**
 
+Vamos partir do seguinte pressuposto: cada string tem um identificador único (como se fosse uma impressão digital). Então se quisermos saber se duas strings são iguais podemos apenas comparar esse identificador!
 
-Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
-![](ASCII_1.gif)
+Mas o que poderia ser esse identificador?
 
+Uma boa idéia foi elaborada pelos cientistas da computação Richard M. Karp e Michael O. Rabin. Eles decidiram somar o valor ASCII referente aos charachteres da string, obtendo assim um valor que funciona como "impressão digital" da string. 
 
+![](ascii_table.png)
 
 $H(projeto) = H(p) + H(r) + H(o) + H(j) + H(e) + H(t) + H(o)$
 
@@ -80,67 +83,38 @@ $H(projeto) = 112 + 114 + 111 + 106 + 101 + 116 +111$
 
 $H(projeto) = 771$
 
+Legal! Vamos exercitar.
 
 ??? Checkpoint 3
-Calcule os hashes das palavras: projeto, rojetoa. ojetoab. e escreva uma reflexão sobre os cálculos
+Calcule os hashes das palavras: amor, omar e roma 
 
 ::: Gabarito
-$H(projeto) = 771$
+$H(amor) = 431$
 
-$H(rojetoa) = 756$
+$H(omar) = 431$
 
-$H(rojetoab) = 740$
+$H(roma) = 431$
 
-Para calcular o hash da palavra subsequente basta subtrair o hash da letra que sai e adicionar o hash da letra nova.
+![](ihrapaz.gif)
+
 :::
 ???
 
-**Rolling Hash**
+É... ainda não estamos lá... 
 
-É o método que usa o hash anterior para calcular o novo, evitando cálculos repetidos e, assim, agilizando o processo.
+**Algorítimo melhorado v2.0**
 
 ??? Checkpoint 4
-Qual é o grande problema de usar a solução descrita acima
-
+O que gerou o erro acima?
 
 ::: Gabarito
-O grande problema de usar o método descrito acima, é que a ordem não é levada em consideração, então as palavras abc e bca são iguais e, além disso, palavras diferentes podem ter o mesmo hash.
+O algorítimo não leva em conta a posição da letra
 :::
 ???
 
-**Rabin-Karp Algorithm**
+Resolver isso é simples! Vamos multiplicar o valor por uma constante elevada a sua posição, assim duas letras iguais em posições diferentes afetam o hash da string de formas diferents. 
 
-O algoritmo de Rabin-Karp foi desenvolvido por Richard M. Karp e Michael O. Rabin. Esse é um algoritmo de busca em texto e faz o uso dos conceitos mencionados anteriormente, com algumas diferenças que lidam com os problemas mencionados.
-
-****Como resolver os hash iguais?****
-
-Se multiplicarmos o valor ASCII do caracter por uma constante elevada a sua posição evitamos todo tipo de coincidência.
-
-Fazendo a somatória dos valores referentes a cada caracter, acabamos com o valor Hash referente a essa string!
-
-!!! Atenção
-As posições são de tras pra frente! Ou seja, na string "abc" a posição de "a" é 2, de "b" é 1 e de "c" é 0.
-!!!
-
-
-??? Checkpoint 5
-
-Usando a tabela ASCII, calcule o valor Hash das strings "bb", "ca" e "ac".
-
-::: Gabarito
-
-| string      |     hash    |
-|-------------|-------------|
-| bb          | 98k¹ + 98k⁰   |
-| ac          | 97k¹ + 99k⁰   |
-| ca          | 99k¹ + 97k⁰   |
-
-:::
-???
-
-podemos então fazer um pseudo código para calular o hash de uma string.
-
-``` 
+``` c
 calcula_hash (string, tamanho, k):
     i = tamanho - 1
     total = 0
@@ -152,72 +126,124 @@ calcula_hash (string, tamanho, k):
     retorna total
 ```
 
-Agora que sabemos o que é um valor hash, fica fácil de encontrar strings dentro de textos. Basta procurar dentro do texto uma string de n caracteres que tenha o mesmo valor hash que a referência!
+Usando a constante como 2, por exemplo, obtemos o seguinte resultado com a palavra "bug"
 
-seria como nesse pseudo código:
+$H(bug) = H(b)*2³ + H(u)*2² + H(g)*2¹$
 
-``` 
-rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
-    hash_referencia = calcula_hash(referencia)
-    
-    l = 0
-    r = l + tamanho_referencia
+$H(bug) = 98*8 + 117*4 + 103*2$
 
-    encontrados = 0
-    enquanto(r <= tamanho_texto):
-        string = texto de l até r
-        hash_string = calcula_hash(string)
+$H(bug) = 1458$
 
-        se(hash_string == hash_referencia):
-            encontrados += 1
+!!! Atenção
+As posições são de tras pra frente! Ou seja, na string "abc" a posição de "a" é 2, de "b" é 1 e de "c" é 0.
+!!!
 
-        l += 1
-        r += 1
-    
-    retorna encontrados
-```
+Vamos testar esse conceito.
 
-??? Checkpoint 6
+??? Checkpoint 5
+Calcule os hashes das palavras: amor, omar e roma 
 
-Como podemos implementar o rolling hash usando o novo jeito cálcular o hash?
+Considere k=2
 
 ::: Gabarito
-$h(rojetoa) = ((h(projeto) - h(p)*k^{posicao} )*k)+h(a)$
+$H(amor) = 97*2⁴ + 109*2³ + 111*2² + 114*2¹ = 3096$
+
+$H(omar) = 111*2⁴ + 109*2³ + 97*2² + 114*2¹ = 3264$
+
+$H(roma) = 114*2⁴ + 111*2³ + 109*2² + 97*2¹ = 3342$
+
 :::
 ???
 
-??? Checkpoint 7
-Agora tente escrever um pseudo código como o descrito no checkpoint anterior
+Ótimo! Funciona. Vamos atualizar o primeiro pseudo código.
 
+```c
+algoritmo_quase_melhorado(texto, padrao, n, m, k){
+    lista = []
+    hash_padrao = calcula_hash(string, m, k)
+    Enquanto(contador <= n-m){
+        hash_techo = calcula_hash(texto[contador:n-1], m, k)
+        Se (hash_padrao == hash_techo){
+            adiciona contador a lista
+        }
+        contador +=1;
+    }
+    return lista
+}
+```
+
+??? Checkpoint 6
+Qual a complexidade do algoritmo?
+::: Gabarito
+O(nm)
+:::
+???
+
+**Algorítimo melhorado v3.0**
+
+Até agora não tratamos a complexidade do algorítimo, apenas mudamos a forma dele identificar a string.
+
+A complexidade do algorítimo continua O(nm) porque continuamos fazendo uma loop de m repetições por comparação (função calcula_hash).
+
+Como poderiamos superar isso?
+
+Quando falamos de situações reais a próxima string a ser analisada vai ser sempre quase identica a anterior, mudando apenas a ultima letra e a poisção das outras.
+
+Será que conseguimos pensar em uma forma de aproveitar o hash da string anterior para calcular o hash da atual?
+
+Para isso, vamos voltar ao exemplo roma/omar 
+
+??? Checkpoint 7
+Ainda considerando k=2, como podemos calcular o valor hash de "omar" a partir do hash de "roma"?
 ::: Gabarito
 
-``` 
-rolling_rabin_karp (texto, referencia, tamanho_texto, tamanho_referencia):
-    hash_referencia = calcula_hash(referencia)
+Se subtrairmos o valor $H(r)*2⁴$, podemos atualizar o valor da constante para os outros charachteres e somar $H(r)*2¹$ 
+
+$H(roma) = 114*2⁴ + 111*2³ + 109*2² + 97*2¹ = 3342$
+
+$H(oma) = 111*2³ + 109*2² + 97*2¹ = 3342 - 114*2⁴ = 1518$
+
+$(111*2³ + 109*2² + 97*2¹) * 2 = 3036$
+
+$H(omar) = 111*2⁴ + 109*2³ + 97*2² + 114*2¹ = 3036 + H(r)*2¹$
+
+$H(omar) = 3264$
+
+funciona como se estivessemos "deslizando" a string para a próxima letra
+
+I M A G E N S 
+
+:::
+???
+
+Essa técnica se chama Roling Hash, vamos implementa-la no nosso pseudo código.
+
+
+```c
+rolling_rabin_karp (texto, padrao, n, m):
+    hash_referencia = calcula_hash(padrao)
     
     l = 0
-    r = l + tamanho_referencia
+    r = l + m
 
     string = texto de l até r
     hash_string = calcula_hash(string)
 
-    encontrados = 0
-    enquanto(r <= tamanho_texto):
+    encontrados = []
+    enquanto(r <= n):
 
         r += 1
 
-        hash_string = (hash_string - ASCII(l)*k**tamanho_referencia) * k + ASCII(r)
+        hash_string = (hash_string - ASCII(l)*k**m + ASCII(r)) * k
 
         se(hash_string == hash_referencia):
-            encontrados += 1
+            adiciona l a encontrados
 
         l += 1
     
     retorna encontrados
 ```
-
-:::
-???
+Apesar de funcional, esse método ainda é suscetível a falhas, por exemplo, as strings ``py 2d`` e ``py K2`` possuem o mesmo valor hash (400) para constante k=2.
 
 **Implementações de Rabin-Karp na prática**
 
