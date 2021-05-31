@@ -1,4 +1,4 @@
-Algorítimo Rabin-Karop para busca em texto
+Algoritimo Rabin-Karpp para busca em texto
 ======
 
 **Introdução**
@@ -20,15 +20,14 @@ A busca em texto tem uma série aplicações:
 
 **O algoritmo ingênuo**
 
-Esse algoritmo faz uso da força bruta para achar o padrão no texto. Ele separa seções do texto que tem o mesmo tamanho do padrão, compara letra por letra, depois descarta a primeira letra e usa a próxima letra, até o texto acabar.
-??? Checkpoint 1
-Escreva o pseudo código descrito acima
+Quando você pensa em algorítimos de comparação de texto, provavelmente a primeira coisa que vem a sua cabeça é alguma forma de comparar letra por letra das entradas.
 
-::: Gabarito
-```
-algoritmo_ingenuo(texto,padrao){
-    n = tamanho do texto;
-    m = tamanho do padrão
+Esse é um método funcional, apesar de ser longe do mais eficiente. Todavia, vamos nos manter com ele por enquanto.
+
+Sabemos que um padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja `m` e `n`o tamanho do texto, podemos pegar as m primeiras letras para comparar, caso não seja igual, excluimos a primeira letra e adicionamos a próxima, caso contrário retorna a posição no texto onde encontrou. Repetindo isso até `m==n` teremos varrido o texto todo!
+
+```c
+algoritmo_ingenuo(texto, padrao, n, m){
     lista = []
     Enquanto( contador <= n-m){
         Se (padrão == texto[contador:n-1]{
@@ -39,24 +38,36 @@ algoritmo_ingenuo(texto,padrao){
     return lista
 }
 ```
-:::
-???
 
+Vamos ver isso na prática! As imágens abaixo ilustram o que esta acontecendo nele:
 
-??? Checkpoint 2
+I N S E R I R  I M A G E M
+
+??? Checkpoint 1
 Qual a complexidade do algoritmo
 
+MELHORAR EXPLICAÇÃO DESSA RESPOSTA
 ::: Gabarito
 O loop vai rodar por n-m vezes. Em cada iteração ele vai comparar o padrão, como esse tem m letras, vai fazer m operações.
 Dessa forma, fazendo as simplificações de complexidade, temos que a complexidade é: O(nm)
 :::
 ???
 
+Isso não parece muito eficiente... Os valores de m na prática são muito grandes, a complexidade seria enorme!
 
+??? Checkpoint 2
+Qual o problema com esse método?
+
+SEM RESPOSTA
+::: Gabarito
+
+:::
+???
+
+Com isso em mente, vamos pensar em como melhorar ele
 
 **O Algoritmo melhorado**
 
-Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
 
 Ao invés de compararmos letra por letra, podemos usar a tabela ASCII e somar as letras. Transformar um texto em um número é uma forma de fazer um HASH. Dessa forma se o padrão mencionado na secção acima seria:
 ![](ASCII_1.gif)
