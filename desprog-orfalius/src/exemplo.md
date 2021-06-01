@@ -3,15 +3,15 @@ Algoritimo Rabin-Karp para busca em texto
 
 **Introdução**
 
-Algoritmos para busca em texto são muito comuns na computação. Esses consistem basicamente em achar um padrão pré estabelecido em um texto.
-Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
+Algoritmos para busca em texto são muito comuns na computação. Consistem basicamente em achar um padrão pré estabelecido em um texto.
+Apesar de exisitirem diferentes implementações, todas têm as mesmas entradas e saídas.
 
-Entradas:
+_Entradas:_
 * Padrão a ser encontrado ex. "projeto";
 * Texto ex. "desafios - projeto 1"
 
-Saída:
-* 11 - que é o índice onde começam o padrão
+_Saída:_
+* 11 - que é o índice onde começa o padrão
 
 A busca em texto tem uma série aplicações:
 
@@ -21,11 +21,11 @@ A busca em texto tem uma série aplicações:
 
 **O algoritmo ingênuo**
 
-Quando você pensa em algorítimos de comparação de texto, provavelmente a primeira coisa que vem a sua cabeça é alguma forma de comparar letra por letra das entradas.
+Quando você pensa em algorítimos de comparação de texto, provavelmente a primeira coisa que vem a sua cabeça é alguma forma de comparar letra por letra o padrão com o texto.
 
 Esse é um método funcional, apesar de ser longe do mais eficiente. Todavia, vamos nos manter com ele por enquanto.
 
-Sabemos que o padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja `m` e `n`o tamanho do texto, devemos pegar as m primeiras letras do texto para poder fazer a comparação. Dessa forma, separamos as m primeiras letras do texto e comparamos uma a uma com o padrão.
+Sabemos que o padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja ```c m``` e o tamanho do texto ```c n```, devemos pegar as ```c m``` primeiras letras do texto para poder fazer a comparação. Dessa forma, separamos as ```c m``` primeiras letras do texto e comparamos uma a uma com o padrão.
 Agora, precisamos achar uma forma de varrer o texto inteiro em busca do padrão.
 O que podemos fazer é: deslocar o padrão no texto em uma casa, da seguinte forma:
 
@@ -304,7 +304,7 @@ Ao encontrar uma correspodencia, podemos checar se todas as letras são iguais, 
 Levando em consideração que existem um tempo adicional para checar a resposta a cada correspondencia, qual seria a complexidade no pior caso?
 
 ::: Gabarito
-No pior caso, o algoritmo encontrará hashes em todas as posiçoes, portanto terá que checar a igualdade letra a letra. A complexidade nesse caso será igual ao algoritmo ingenuo O(n+m).
+No pior caso, o algoritmo encontrará hashes em todas as posiçoes, portanto terá que checar a igualdade letra a letra. A complexidade nesse caso será igual ao algoritmo ingenuo O(n*m).
 :::
 ???
 
@@ -312,7 +312,7 @@ No pior caso, o algoritmo encontrará hashes em todas as posiçoes, portanto ter
 Agora pensando que existe apenas uma corresponcia, qual seria a complexidade no melhor caso?
 
 ::: Gabarito
-No melhor caso, o algoritmo percorre o texto por completo, porém, como só existem uma correspondencia, só é comparado letra a letra uma vez, resultando na complexidade O(n*m).
+No melhor caso, o algoritmo percorre o texto por completo, porém, como só existem uma correspondencia, só é comparado letra a letra uma vez, resultando na complexidade O(n+m).
 :::
 ???
 
