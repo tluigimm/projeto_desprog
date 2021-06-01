@@ -1,16 +1,17 @@
-Algoritimo Rabin-Karpp para busca em texto
+Algoritimo Rabin-Karp para busca em texto
 ======
 
 **Introdução**
 
-Algoritmos para busca em texto são muito comuns na computação. Esses consistem basicamente em achar um padrão pré estabelecido em um texto. Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
+Algoritmos para busca em texto são muito comuns na computação. Esses consistem basicamente em achar um padrão pré estabelecido em um texto.
+Apesar das diferentes implementações que existem, todas têm as mesmas entradas e saídas.
 
 Entradas:
 * Padrão a ser encontrado ex. "projeto";
-* Texto ex. "projeto de desafios da computação, entrega 2 do projeto 1."
+* Texto ex. "desafios - projeto 1"
 
 Saída:
-* 0 e 48 - que são os índices onde começam o padrão
+* 11 - que é o índice onde começam o padrão
 
 A busca em texto tem uma série aplicações:
 
@@ -24,12 +25,22 @@ Quando você pensa em algorítimos de comparação de texto, provavelmente a pri
 
 Esse é um método funcional, apesar de ser longe do mais eficiente. Todavia, vamos nos manter com ele por enquanto.
 
-Sabemos que um padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja ```py m``` e ```py n``` o tamanho do texto, podemos pegar as m primeiras letras para comparar, caso não seja igual, excluimos a primeira letra e adicionamos a próxima, caso contrário retorna a posição no texto onde encontrou. Repetindo isso até ```py m==n``` teremos varrido o texto todo!
+Sabemos que o padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja `m` e `n`o tamanho do texto, devemos pegar as m primeiras letras do texto para poder fazer a comparação. Dessa forma, separamos as m primeiras letras do texto e comparamos uma a uma com o padrão.
+Agora, precisamos achar uma forma de varrer o texto inteiro em busca do padrão.
+O que podemos fazer é: deslocar o padrão no texto em uma casa, da seguinte forma:
+
+;rolling
+
+Feito isso, precisamos, para cada passo, comparar o trecho selecionado com o padrão pré estabelecido. O jeito mais simples de se fazer isso é comparar letra por letra.
+
+Se todas as letras forem iguais, é necessário salvar o índice, uma vez que foi achado um ocorrência do padrão no texto.
+
 
 ```c
 algoritmo_ingenuo(texto, padrao, n, m){
     lista = []
-    Enquanto(contador <= n-m){
+    Enquanto( contador <= n-m){
+        For(letras no padrão)
         Se (padrão == texto[contador:n-1]{
             lista.append(contador)
         }
@@ -38,34 +49,42 @@ algoritmo_ingenuo(texto, padrao, n, m){
     return lista
 }
 ```
+A simulação do loop principal é:
 
-Vamos ver isso na prática! As imágens abaixo ilustram o que esta acontecendo nele:
+;rolling_index
 
-I N S E R I R  I M A G E M
+Simulação do loop interno na primeira iteração:
+
+;ingenuo
+
+
+
 
 ??? Checkpoint 1
 Qual a complexidade do algoritmo
 
-MELHORAR EXPLICAÇÃO DESSA RESPOSTA
 ::: Gabarito
-O loop vai rodar por n-m vezes. Em cada iteração ele vai comparar o padrão, como esse tem m letras, vai fazer m operações.
-Dessa forma, fazendo as simplificações de complexidade, temos que a complexidade é: O(nm)
+Observando o loop principal, é possível perceber que esse vai rodar por n-m vezes.
+O loopo interno, vai compara letra por letra, sabendo que o padrão tem m letras, sabemos que haverá m iterações.
+Assim, para cada iteração do loop principal, temos m iterações do loop interno. Portanto a complexidade será O(m*(n-m)).
+Simplificando, temos que a complexidade é de O(nm)
 :::
 ???
 
-Isso não parece muito eficiente... Os valores de m na prática são muito grandes, a complexidade seria enorme!
+Isso não parece muito eficiente... Os valores de m e n na prática podem ser muito grandes, a complexidade seria enorme!
 
 ??? Checkpoint 2
 Qual o problema com esse método?
 
 ::: Gabarito
-
-esse custo vem da comparação letra em letra
-
+O problema com esse método é que esse possui uma complexidade muito alta. No nosso exemplo, usamos um texto pequena, mas imagine uma implementação para a detecção de plágio, na qual procura-se uma frase em todos os trabalhos ja enviados pelos alunos do Insper. Teriamos um gasto de processamento muito grande, o que tornaria o processo inviável.
 :::
 ???
 
-Com isso em mente, vamos pensar em como melhorar ele
+Ao analisar o problema que o algoritmo tenta resolver e sua implementação é possível perceber que é um processo muito custoso.
+No entando, o seu loop principal (que varre o texto) é essencial, uma vez que precisamos, analisar a ocorrência no texto.
+O processo de comparar letra por letra, no entando, pode ser revisto e simplicado, de modo a tentar reduzir a complexidade.
+
 
 **O Algoritmo (quase) melhorado**
 
@@ -73,15 +92,19 @@ Vamos partir do seguinte pressuposto: cada string tem um identificador único (c
 
 Mas o que poderia ser esse identificador?
 
-Uma boa idéia foi elaborada pelos cientistas da computação Richard M. Karp e Michael O. Rabin. Eles decidiram somar o valor ASCII referente aos charachteres da string, obtendo assim um valor que funciona como "impressão digital" da string. 
+Uma boa idéia foi elaborada pelos cientistas da computação Richard M. Karp e Michael O. Rabin. Eles decidiram somar o valor ASCII referente aos caracteres da string, obtendo assim um valor que funciona como "impressão digital" da string. 
 
 ![](ascii_table.png)
+
+Agora vamos usar a tabela ASCII para calcular o hash da palavra "projeto". É muito simples basta, para cada letra, encontrar o seu valor numérico e depois somar todos os valores:
+
 
 $H(projeto) = H(p) + H(r) + H(o) + H(j) + H(e) + H(t) + H(o)$
 
 $H(projeto) = 112 + 114 + 111 + 106 + 101 + 116 +111$
 
 $H(projeto) = 771$
+
 
 Legal! Vamos exercitar.
 
@@ -101,6 +124,11 @@ $H(roma) = 431$
 ???
 
 É... ainda não estamos lá... 
+
+Como é possível perceber pelos resultados dos hashes das palavras calculadas a cima, existe um grande problema nesse método: palavras diferentes podem ter o mesmo valor, causando um falso positivo.
+Dessa forma, usando a implementação como foi apresentada, o algoritimo pode indicar trecho do texto que não é igual ao padrão fornecido pelo usuário.
+
+
 
 **Algorítimo melhorado v2.0**
 
@@ -175,9 +203,12 @@ algoritmo_quase_melhorado(texto, padrao, n, m, k){
 ??? Checkpoint 6
 Qual a complexidade do algoritmo?
 ::: Gabarito
-O(nm)
+Assim como o algoritimo ingênuo, esse, em seu loop principal terá n-m iterações. Em seu loop interno, as m letras do padrão serão somadas, ou seja haverá m operações por iteração.
+Dessa forma, a complexidade será de O(m*(n-m)).
+Simplificando, temos que a complexidade é de O(nm)
 :::
 ???
+
 
 **Algorítimo melhorado v3.0**
 
@@ -211,7 +242,7 @@ $H(omar) = 3264$
 
 funciona como se estivessemos "deslizando" a string para a próxima letra
 
-I M A G E N S 
+
 
 :::
 ???
@@ -247,34 +278,43 @@ Apesar de funcional, esse método ainda é suscetível a falhas, por exemplo, as
 
 **Implementações de Rabin-Karp na prática**
 
-Podemos implementar o algoritmo de Rabin-Kharp de duas maneiras.
-
-***Monte Carlo***
-
-Implementado como Monte Carlo, quando o hash calculado é igual ao hash buscado, o índice desse valor é salvo como uma correspondência.
-Apesar de ser improvável, podem existir duas strings diferentes que geram o mesmo hash, levando o algoritmo a cometer erros. 
+Com o que vimos até agora, ainda existe a possibilidade de erro. Podemos fazer algumas suposiçoes sobre a complexidade para então encontrarmos uma maneira eficiente de aprimorarmos a solução.
 
 
 ??? Checkpoint 8
-Qual é a complexidade
+Sabendo que o algoritmo percorrerá o texto inteiro, qual será a complexidade?
 
 ::: Gabarito
-O loop vai rodar por n-m vezes, até o final do texto. Assim a complexidade será O(n)
+O loop irá rodar por n-m vezes, até o final do texto. Assim a complexidade será O(n)
 :::
 ???
 
-***Las Vegas***
-
-A versão Las Vegas do Algoritmo, ao encontrar uma correspondência, compara letra por letra com a palavra buscada, garantido que são iguais.
-Diferentemente do Monte Carlo, esse algoritmo não erra, porém ele tem maior complexidade, sendo que no pior dos casos ele pode ter a mesma eficiência do algoritmo ingênuo.
-
+Existe então uma complexidade linear porém ainda há a possibilidade de erro, isso é chamado de algoritmo de Monte Carlo.
+ Podemos aprimorar os resultados sem aumentar muito a complexidade adicionando um metódo de checagem, toda vez que o algoritmo encontra uma corresponencia.
 
 ??? Checkpoint 9
-Qual é a complexidade
+Como poderiamos implementar uma checagem, de forma a garantir o resultado positivo?
 
 ::: Gabarito
-Como o algoritmo faz a comparação de strings na força bruta apenas nas correspondências.No melhor caso o algoritmo rodará por todo o texto e quando achar um hash igual vai comparar letra a letra, tendo a complexidade igual a O(n+m).
-No pior dos casos o todos os hash do texto serão iguais ao do padrão, dessa forma, o algoritmo vai rodas pelo texto inteiro e a cada iteração vai comparar letra a letra, tendo uma complexidade igual a O(nm)
-
+Ao encontrar uma correspodencia, podemos checar se todas as letras são iguais, garantindo o acerto do algoritimo.
 :::
 ???
+
+??? Checkpoint 10
+Levando em consideração que existem um tempo adicional para checar a resposta a cada correspondencia, qual seria a complexidade no pior caso?
+
+::: Gabarito
+No pior caso, o algoritmo encontrará hashes em todas as posiçoes, portanto terá que checar a igualdade letra a letra. A complexidade nesse caso será igual ao algoritmo ingenuo O(n+m).
+:::
+???
+
+??? Checkpoint 11
+Agora pensando que existe apenas uma corresponcia, qual seria a complexidade no melhor caso?
+
+::: Gabarito
+No melhor caso, o algoritmo percorre o texto por completo, porém, como só existem uma correspondencia, só é comparado letra a letra uma vez, resultando na complexidade O(n*m).
+:::
+???
+
+
+Essa forma de pensar é classificada com algoritmo de Las Vegas, onde é garantida a certeza da resposta, porem existe a possibilidade aletoria de uma complexidade alta, algo comparavel á um cassino.
