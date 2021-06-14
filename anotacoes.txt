@@ -1,0 +1,14 @@
+Maiusculo no título
+melhorar formatação (fonte de subtítulo) (melhor segmentação)
+corrigir final da introdução
+colocar string como "letras dentro de caixinhas" na entrada
+consertar animações
+
+- não precisa do checkpoint 2, da pra transformar ele em texto
+- Rabin e Karp não propuseram soma de ASCII, propuseram a versão mais sofisticada
+- checkpoint 4 => "deu o mesmo resultado porque as letras são as mesmas, mas as palavras não são iguais, que outras informações podemos levar em conta para diferenciar as palavras?"
+- checkpoint 6, ao invés de perguntar qual a complexidade, perguntar se houve melhora na complexidade => "agora temos um código que compara impressão digital da string ao invés de comparar letra por letra, houve melhora na complexidade?" "agora temos uma coisa bem melhor... né?.."
+- entregar menos a idéia do roling no "algorítimo melhorado v3.0", transofrmar em atividade
+- fazer com que a confusão do algorítimo seja atividade, não dada de graça
+
+- adicionar mais atividades no monte carlo e las vegas

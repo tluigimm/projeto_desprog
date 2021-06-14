@@ -25,7 +25,8 @@ Quando você pensa em algorítimos de comparação de texto, provavelmente a pri
 
 Esse é um método funcional, apesar de ser longe do mais eficiente. Todavia, vamos nos manter com ele por enquanto.
 
-Sabemos que o padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja `m` e `n`o tamanho do texto, devemos pegar as m primeiras letras do texto para poder fazer a comparação. Dessa forma, separamos as m primeiras letras do texto e comparamos uma a uma com o padrão.
+Sabemos que o padrão que queremos encontrar no texto deve ser menor que o texto em si. Portanto, supondo que o tamanho do padrão seja ``py m`` e ``py n`` o tamanho do texto, devemos pegar as m primeiras letras do texto para poder fazer a comparação. Dessa forma, separamos as m primeiras letras do texto e comparamos uma a uma com o padrão.
+
 Agora, precisamos achar uma forma de varrer o texto inteiro em busca do padrão.
 O que podemos fazer é: deslocar o padrão no texto em uma casa, da seguinte forma:
 
@@ -73,13 +74,7 @@ Simplificando, temos que a complexidade é de O(nm)
 
 Isso não parece muito eficiente... Os valores de m e n na prática podem ser muito grandes, a complexidade seria enorme!
 
-??? Checkpoint 2
-Qual o problema com esse método?
-
-::: Gabarito
 O problema com esse método é que esse possui uma complexidade muito alta. No nosso exemplo, usamos um texto pequena, mas imagine uma implementação para a detecção de plágio, na qual procura-se uma frase em todos os trabalhos ja enviados pelos alunos do Insper. Teriamos um gasto de processamento muito grande, o que tornaria o processo inviável.
-:::
-???
 
 Ao analisar o problema que o algoritmo tenta resolver e sua implementação é possível perceber que é um processo muito custoso.
 No entando, o seu loop principal (que varre o texto) é essencial, uma vez que precisamos, analisar a ocorrência no texto.
@@ -92,7 +87,7 @@ Vamos partir do seguinte pressuposto: cada string tem um identificador único (c
 
 Mas o que poderia ser esse identificador?
 
-Uma boa idéia foi elaborada pelos cientistas da computação Richard M. Karp e Michael O. Rabin. Eles decidiram somar o valor ASCII referente aos caracteres da string, obtendo assim um valor que funciona como "impressão digital" da string. 
+Uma boa idéia seria somar o valor ASCII referente aos caracteres da string, obtendo assim um valor que funciona como "impressão digital" da string. 
 
 ![](ascii_table.png)
 
@@ -108,7 +103,7 @@ $H(projeto) = 771$
 
 Legal! Vamos exercitar.
 
-??? Checkpoint 3
+??? Checkpoint 2
 Calcule os hashes das palavras: amor, omar e roma 
 
 ::: Gabarito
@@ -128,15 +123,14 @@ $H(roma) = 431$
 Como é possível perceber pelos resultados dos hashes das palavras calculadas a cima, existe um grande problema nesse método: palavras diferentes podem ter o mesmo valor, causando um falso positivo.
 Dessa forma, usando a implementação como foi apresentada, o algoritimo pode indicar trecho do texto que não é igual ao padrão fornecido pelo usuário.
 
-
+Esse erro ocorre porque, apesar de as letras serem as mesmas, as palavras não são iguais. 
 
 **Algorítimo melhorado v2.0**
 
-??? Checkpoint 4
-O que gerou o erro acima?
-
+??? Checkpoint 3
+Que outras informações podemos levar em conta para diferenciar as palavras?
 ::: Gabarito
-O algorítimo não leva em conta a posição da letra
+Podemos levar em conta a sua posição na palavra. Dessa forma, por exemplo, a letra "a" nos exemplos do checkpoint 2 somariam valores diferentes ao resultado final.
 :::
 ???
 
@@ -168,7 +162,7 @@ As posições são de tras pra frente! Ou seja, na string "abc" a posição de "
 
 Vamos testar esse conceito.
 
-??? Checkpoint 5
+??? Checkpoint 4
 Calcule os hashes das palavras: amor, omar e roma 
 
 Considere k=2
@@ -200,12 +194,16 @@ algoritmo_quase_melhorado(texto, padrao, n, m, k){
 }
 ```
 
-??? Checkpoint 6
-Qual a complexidade do algoritmo?
+Agora temos um código que compara impressão digital de string ao invés de comparar letra por letra.
+
+??? Checkpoint 5
+Houve melhoria na complexidade?
 ::: Gabarito
 Assim como o algoritimo ingênuo, esse, em seu loop principal terá n-m iterações. Em seu loop interno, as m letras do padrão serão somadas, ou seja haverá m operações por iteração.
 Dessa forma, a complexidade será de O(m*(n-m)).
-Simplificando, temos que a complexidade é de O(nm)
+Simplificando, temos que a complexidade é de O(nm).
+
+Portanto, não, não houve melhoria na complexidade.
 :::
 ???
 
@@ -218,7 +216,14 @@ A complexidade do algorítimo continua O(nm) porque continuamos fazendo uma loop
 
 Como poderiamos superar isso?
 
-Quando falamos de situações reais a próxima string a ser analisada vai ser sempre quase identica a anterior, mudando apenas a ultima letra e a poisção das outras.
+Vamos praticar com uma situação mais próxima do real para procurar alguma saida.
+
+??? Checkpoint 6
+Mantendo k=2, aplique o algoritimo_quase_melhorado na string "abcdefg" procurando a string "def". Preste atenção em como poderiamos otimizar o processo.
+::: Gabarito
+;abcdefg
+:::
+???
 
 Será que conseguimos pensar em uma forma de aproveitar o hash da string anterior para calcular o hash da atual?
 
@@ -241,8 +246,6 @@ $H(omar) = 111*2⁴ + 109*2³ + 97*2² + 114*2¹ = 3036 + H(r)*2¹$
 $H(omar) = 3264$
 
 funciona como se estivessemos "deslizando" a string para a próxima letra
-
-
 
 :::
 ???
@@ -274,14 +277,24 @@ rolling_rabin_karp (texto, padrao, n, m):
     
     retorna encontrados
 ```
-Apesar de funcional, esse método ainda é suscetível a falhas, por exemplo, as strings ``py 2d`` e ``py K2`` possuem o mesmo valor hash (400) para constante k=2.
+Legal! Vamos praticar mais.
+
+??? Checkpoint 8
+Utilize o rolling_rabin_karp com a string "ADAABDCB" procurando a string "BDC".
+Percebe algum erro?
+::: Gabarito
+As strings "BDC" e "DAA" possuem o mesmo valor hash.
+:::
+???
+
+Apesar de funcional, esse método ainda é suscetível a falhas. Contudo, existem meios para superar elas.
 
 **Implementações de Rabin-Karp na prática**
 
 Com o que vimos até agora, ainda existe a possibilidade de erro. Podemos fazer algumas suposiçoes sobre a complexidade para então encontrarmos uma maneira eficiente de aprimorarmos a solução.
 
 
-??? Checkpoint 8
+??? Checkpoint 9
 Sabendo que o algoritmo percorrerá o texto inteiro, qual será a complexidade?
 
 ::: Gabarito
@@ -292,7 +305,7 @@ O loop irá rodar por n-m vezes, até o final do texto. Assim a complexidade ser
 Existe então uma complexidade linear porém ainda há a possibilidade de erro, isso é chamado de algoritmo de Monte Carlo.
  Podemos aprimorar os resultados sem aumentar muito a complexidade adicionando um metódo de checagem, toda vez que o algoritmo encontra uma corresponencia.
 
-??? Checkpoint 9
+??? Checkpoint 10
 Como poderiamos implementar uma checagem, de forma a garantir o resultado positivo?
 
 ::: Gabarito
@@ -300,7 +313,7 @@ Ao encontrar uma correspodencia, podemos checar se todas as letras são iguais, 
 :::
 ???
 
-??? Checkpoint 10
+??? Checkpoint 11
 Levando em consideração que existem um tempo adicional para checar a resposta a cada correspondencia, qual seria a complexidade no pior caso?
 
 ::: Gabarito
@@ -308,7 +321,7 @@ No pior caso, o algoritmo encontrará hashes em todas as posiçoes, portanto ter
 :::
 ???
 
-??? Checkpoint 11
+??? Checkpoint 12
 Agora pensando que existe apenas uma corresponcia, qual seria a complexidade no melhor caso?
 
 ::: Gabarito
