@@ -1,14 +1,20 @@
-algoritmo Rabin-Karp para busca em texto
-======
+# Algoritmo Rabin-Karp para busca em texto
 
-**Introdução**
+
+
+## Introdução
 
 Algoritmos para busca em texto são muito comuns na computação. Consistem basicamente em achar um padrão pré estabelecido em um texto.
 Apesar de exisitirem diferentes implementações, todas têm as mesmas entradas e saídas.
 
 _Entradas:_
-* Padrão a ser encontrado ex. "projeto";
-* Texto ex. "desafios - projeto 1"
+* Padrão a ser encontrado ex:
+
+![](padrao.png)
+
+* Texto base:
+
+![](texto.png)
 
 _Saída:_
 * 11 - que é o índice onde começa o padrão
@@ -19,7 +25,7 @@ A busca em texto tem uma série aplicações:
 * Busca por arquivos que contêm certas palavras chaves;
 * Detecção de plágio
 
-**O algoritmo ingênuo**
+## O algoritmo ingênuo
 
 Quando você pensa em algorítimos de comparação de texto, provavelmente a primeira coisa que vem a sua cabeça é alguma forma de comparar letra por letra o padrão com o texto.
 
@@ -82,7 +88,7 @@ No entanto, o seu loop principal (que varre o texto) é essencial, uma vez que p
 O processo de comparar letra por letra, no entando, pode ser revisto e simplificado, de modo a tentar reduzir a complexidade.
 
 
-**O Algoritmo (quase) melhorado**
+## O Algoritmo (quase) melhorado
 
 Vamos partir do seguinte pressuposto: cada string tem um identificador único (como se fosse uma impressão digital). Então se quisermos saber se duas strings são iguais podemos apenas comparar esse identificador!
 
@@ -127,7 +133,7 @@ Dessa forma, usando a implementação como foi apresentada, o algoritmo pode ind
 
 Esse erro ocorre porque, apesar de as letras serem as mesmas, as palavras não são iguais. 
 
-**Algoritimo melhorado v2.0**
+## Algoritimo melhorado v2.0
 
 ??? Checkpoint 3
 Que outras informações podemos levar em conta para diferenciar as palavras?
@@ -210,7 +216,7 @@ Portanto, não, não houve melhoria na complexidade.
 ???
 
 
-**Algorítimo melhorado v3.0**
+## Algorítimo melhorado v3.0
 
 Até agora não tratamos a complexidade do algoritmo, apenas mudamos a forma dele identificar a string.
 
@@ -291,7 +297,7 @@ As strings "BDC" e "DAA" possuem o mesmo valor hash.
 
 Apesar de funcional, esse método ainda é suscetível a falhas. Contudo, existem meios para superar elas.
 
-**Implementações de Rabin-Karp na prática**
+## Implementações de Rabin-Karp na prática
 
 Com o que vimos até agora, ainda existe a possibilidade de erro. Podemos fazer algumas suposições sobre a complexidade para então encontrarmos uma maneira eficiente de aprimorarmos a solução.
 
